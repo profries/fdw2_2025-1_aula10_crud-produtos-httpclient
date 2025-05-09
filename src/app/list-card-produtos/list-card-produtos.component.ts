@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Produto } from '../produto';
-import { ProdutoService } from '../produto.service';
+import { ProdutoApiService } from '../produto-api.service';
 
 @Component({
   selector: 'app-list-card-produtos',
@@ -11,7 +11,11 @@ import { ProdutoService } from '../produto.service';
 export class ListCardProdutosComponent {
   listaProdutos: Produto[] = []
 
-  constructor(private produtoService: ProdutoService) {
-    this.listaProdutos = this.produtoService.listar();
+  constructor(private produtoApiService: ProdutoApiService) {
+    this.produtoApiService.listar().subscribe(
+      (produtos) => {
+        this.listaProdutos = produtos;
+      }
+    );
   }
 }

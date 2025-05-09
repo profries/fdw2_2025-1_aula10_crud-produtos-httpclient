@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Produto } from '../produto';
-import { ProdutoService } from '../produto.service';
+import { ProdutoApiService } from '../produto-api.service';
 
 @Component({
   selector: 'app-tabela-produtos',
@@ -12,13 +12,25 @@ export class TabelaProdutosComponent {
   nomePesquisa?: string;
   lista: Produto[] = [];
 
-  constructor(private produtoService: ProdutoService){
-    this.lista = this.produtoService.listar();
+  constructor(private produtoApiService: ProdutoApiService){
+    this.listar();
+  }
+  
+  listar() {
+    this.produtoApiService.listar().subscribe(
+      (produtos) => {
+        this.lista = produtos
+      }
+    );
   }
 
   deletar(id?: number) {
-    alert(`Produto com id ${id} removido com sucesso!`);
-    this.produtoService.deletar(id);
+    this.produtoApiService.deletar(id).subscribe(
+      (produto) => {
+        alert(`Produto com id ${produto.id} removido com sucesso!`);
+        this.listar();
+      }
+    );
   }
 
 }
